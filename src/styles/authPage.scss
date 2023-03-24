@@ -1,0 +1,173 @@
+@use '@/styles/libs/fonts.scss';
+@import '@/styles/libs/variables.scss';
+
+// $tabs: 520px;
+// $desktop: 1200px;
+
+// #one {
+//     @include fonts.light;
+//     font-size: 24px;
+// }
+
+.invalid {
+    border: 1px solid $invalid !important;
+}
+
+.valid {
+    border: 1px solid $valid !important;
+}
+
+.auth,
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.auth {
+    width: 250px;
+    margin: 0 auto;
+    padding-top: 95px;
+
+    span {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &:nth-child(1) {
+            @include fonts.bold;
+            font-size: 20px;
+            color: $main-text;
+            margin-bottom: 10px;
+        }
+
+        &:nth-child(2) {
+            @include fonts.light;
+            font-size: 12px;
+            color: $secondary-text;
+            letter-spacing: 0.12em;
+            margin-bottom: 60px;
+        }
+    }
+
+    .form-group {
+        transition: 0.5s;
+        margin-bottom: 20px;
+
+        label {
+            @include fonts.bold;
+            font-size: 11px;
+            margin-bottom: 10px;
+        }
+
+        input {
+            height: 29px;
+            background: transparent;
+            border-radius: 10px;
+            border: 1px solid $main-text;
+            padding-left: 10px;
+            @include fonts.regular;
+            font-size: 12px;
+        }
+
+        p {
+            @include fonts.regular;
+            font-size: 12px;
+            margin-top: 8px;
+            color: $invalid;
+        }
+    }
+
+    .btn-primary {
+        transition: 0.5s;
+        width: 100%;
+        margin-top: 30px;
+        cursor: pointer;
+
+        &:hover {
+            background-color: $primary;
+            color: $white;
+        }
+
+        border: 1px solid $primary-plus;
+        color: $primary-plus;
+        border-radius: 50px;
+        height: 38px;
+        font-size: 19px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        @include fonts.light
+    }
+
+    a {
+        @include fonts.regular;
+        font-size: 12px;
+        color: $secondary-text;
+        margin-top: 10px;
+    }
+}
+
+@media (min-width: $tabs) {
+    .auth {
+        width: 47vw;
+
+        span {
+
+            &:nth-child(1) {
+                font-size: 1.9rem;
+            }
+
+            &:nth-child(2) {
+                font-size: 1rem;
+            }
+        }
+
+        .form-group {
+            margin-bottom: 3vw;
+
+            label {
+                font-size: 1rem;
+                margin-bottom: 10px;
+            }
+
+            input {
+                height: 40px;
+                padding-left: 10px;
+                font-size: 1rem;
+                border-radius: 30px;
+            }
+        }
+
+        .btn-primary {
+            width: 100%;
+            margin-top: 3rem;
+            height: 50px;
+            font-size: 1.2rem;
+        }
+
+        a {
+            font-size: 1rem;
+            margin-top: 1.8rem;
+        }
+    }
+}
+
+@media (min-width: $desktop) {
+    .auth {
+        width: 35vw;
+
+        .form-group {
+            margin-bottom: 2.5vw;
+
+            label {
+                margin-bottom: 15px;
+            }
+
+            input {
+                height: 40px;
+                padding-left: 20px;
+                ;
+            }
+        }
+    }
+}
