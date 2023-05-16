@@ -1,6 +1,12 @@
 <template>
-    <div @click="() => sidebarIsOpen = true" class="menu">
-        <MenuIcon class="sidebar-open-btn" width="35px" height="35px" color="#000000" />
+    <div class="menu">
+        <MenuIcon
+            @click="() => sidebarIsOpen = true"
+            class="sidebar-open-btn"
+            width="35px"
+            height="35px"
+            color="#000000"
+        />
     </div>
 
 
@@ -30,8 +36,14 @@ export default {
     setup() {
         const sidebarIsOpen = ref(false)
 
+        const check = () => {
+            console.log('check!')
+        }
+
 
         return {
+            check,
+
             sidebarIsOpen,
             MenuIcon,
             Sidebar,

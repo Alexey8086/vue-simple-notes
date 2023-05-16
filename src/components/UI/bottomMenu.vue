@@ -1,26 +1,73 @@
 <template>
     <div class="bottom-menu">
         <div class="bottom-menu__container">
-            <button class="btn-primary warning">редактировать</button>
-            <button class="btn-primary okey">сохранить</button>
-            <button class="btn-primary danger">удалить</button>
+            <button v-if="editBtnShow" @click="editNote" class="btn-primary warning">редактировать</button>
+            <button v-if="saveBtnShow" @click="saveNote" class="btn-primary okey">сохранить</button>
+            <button v-if="deleteBtnShow" @click="$emit('deleteNote')" class="btn-primary danger">удалить</button>
+            <button v-if="cancelBtnShow" @click="$emit('cancelNote')" class="btn-primary cancel">отмена</button>
         </div>
     </div>
 </template>
 
 <script>
+import { ref } from 'vue'
+import { useRoute } from 'vue-router'
+
 export default {
     name: '',
     components: {},
     props: [''],
-    emits: [''],
+    emits: ['editNote', 'saveNote', 'deleteNote', 'cancelNote'],
 
-    setup() {
+    setup(_, context) {
+        const editBtnShow = ref(false)
+        const saveBtnShow = ref(false)
+        const deleteBtnShow = ref(false)
+        const cancelBtnShow = ref(false)
 
+        const route = useRoute()
+        const isNewNote = route.meta?.isNewNote
+        customLog(isNewNote)
+
+        if (!isNewNote) {
+            editBtnShow.value = true
+            deleteBtnShow.value = true
+        }
+
+        const editNote = () => {
+            context.emit('editNote')
+            editBtnShow.value = false
+            deleteBtnShow.value = false
+            cancelBtnShow.value = true
+            saveBtnShow.value = true
+            customLog('editNote Alert')
+        }
+
+        const saveNote = () => {
+            context.emit('saveNote')
+        }
+
+        const deleteNote = () => {
+            context.emit('deleteNote')
+        
+        }
+        
+        const cancelNote = () => {
+            context.emit('cancelNote')
+        
+        }
 
 
         return {
+            editBtnShow,
+            saveBtnShow,
+            deleteBtnShow,
+            cancelBtnShow,
 
+            editNote,
+            saveNote,
+            deleteNote,
+            cancelNote,
         }
     }
 }
@@ -36,14 +83,15 @@ $menu-tabs-height: 60px;
 $menu-desk-height: 50px;
 
 .bottom-menu {
-    position: sticky;
-    z-index: 2;
+    position: fixed;
+    z-index: 1;
     background-color: $pure-white;
     bottom: 0;
-    width: 100vw;
+    left: 0;
+    right: 0;
     height: 40px;
     box-shadow: 0px 1px 8px 1px rgba(0, 0, 0, 0.25);
-    border-radius: 0px 0px 10px 10px;
+    // border-radius: 0px 0px 10px 10px;
 
     .bottom-menu__container {
         background-color: transparent;
@@ -70,9 +118,8 @@ $menu-desk-height: 50px;
             @include fonts.light;
 
             &.okey {
-                display: none;
                 border: 1px solid $okey;
-                color: $okey;
+                color: $main-text;
 
                 &:hover {
                     background-color: $okey;
@@ -96,6 +143,16 @@ $menu-desk-height: 50px;
 
                 &:hover {
                     background-color: $invalid;
+                    color: $pure-white;
+                }
+            }
+
+            &.cancel {
+                border: 1px solid $primary-plus;
+                color: $main-text;
+
+                &:hover {
+                    background-color: $primary;
                     color: $pure-white;
                 }
             }

@@ -1,35 +1,41 @@
 <template>
-    <div @click="pushUrl('/note')" class="note">
+    <div @click="router.push({name: 'TheNote', params: {id: idx}})" class="note">
         <div class="note__content">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores autem modi dicta laboriosam
-            voluptates eligendi sed dolor explicabo voluptas nam.
+            {{ content }}
         </div>
         <hr />
         <div class="note__title">
             <marquee behavior="scroll" direction="left" bgcolor="transparent">
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nulla, sed?
+                {{ title }}
             </marquee>
         </div>
         <div class="note__time">{{ date }}</div>
     </div>
 </template>
 
-<script>
-import navigate from '@/use/navigate.js'
+<script lang="js">
+import { useRouter } from 'vue-router'
 
 export default {
     name: '',
     components: {},
-    props: ['content', 'title', 'date'],
+    props: ['content', 'title', 'date', 'idx'],
     emits: [''],
 
     
 
-    setup() {
+    setup(props) {
 
+        const router = useRouter()
+        
 
         return {
-            pushUrl: navigate().pushUrl
+            router,
+
+            content: props.content,
+            title: props.title,
+            date: props.date,
+            idx: props.idx,
         }
     }
 }

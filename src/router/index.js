@@ -1,10 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
-// import store from '@/store'
+import store from '@/store'
 import MainPG from '@/views/Main.vue'
-import AuthPG from '@/views/Auth.vue'
+import SignUp from '@/views/SignUp.vue'
+import SignIn from '@/views/SignIn.vue'
 import SettingsPG from '@/views/Settings.vue'
 import HomePG from '@/views/Home.vue'
 import NotePG from '@/views/Note.vue'
+import NotFound from '@/views/404.vue'
 
 const routes = [
   {
@@ -20,22 +22,21 @@ const routes = [
   {
     path: '/signup',
     name: 'SignUp',
-    // component: AuthPG,
-    component: () => import('../views/Auth.vue'),
+    component: SignUp,
     meta: {
       layout: 'main',
       auth: false,
-      signup: true,
+      signUp: true,
     }
   },
   {
     path: '/signin',
     name: 'SignIn',
-    component: AuthPG,
+    component: SignIn,
     meta: {
       layout: 'main',
       auth: false,
-      signup: false,
+      signIn: true,
     }
   },
   {
@@ -45,7 +46,6 @@ const routes = [
     meta: {
       layout: 'main',
       auth: true,
-      signup: undefined,
     }
   },
   {
@@ -54,42 +54,61 @@ const routes = [
     component: HomePG,
     meta: {
       layout: 'sidebar',
-      auth: false,
-      signup: undefined,
+      auth: true,
     }
   },
   {
-    path: '/note',
-    name: 'Note',
+    path: '/note/:id',
+    name: 'TheNote',
     component: NotePG,
     meta: {
       layout: 'sidebar',
       auth: true,
-      signup: undefined,
+      // isNewNote: false,
+    }
+  },
+  {
+    path: '/note/new',
+    name: 'newNote',
+    component: NotePG,
+    meta: {
+      layout: 'sidebar',
+      auth: true,
+      // isNewNote: true
+    }
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'notFound',
+    component: NotFound,
+    meta: {
+      layout: 'main',
+      auth: false,
     }
   },
   
 ]
 
 const router = createRouter({
-    history: createWebHistory(),
+    history: createWebHistory(process.env.BASE_URL),
     routes,
     linkActiveClass: 'active',
     linkExactActiveClass: 'active'
 })
 
-// router.beforeEach((to, from, next) => {
-//   // получаем boolean значение - данной странице нужна авторизация или нет
-//   const requireAuth = to.meta.auth
+router.beforeEach((to, from, next) => {
+  // получаем boolean значение - данной странице нужна авторизация или нет
+  const needAuth = to.meta.auth
 
-//   // если странице требуется авторизация и авторизация есть, то продолжаем
-//   if (requireAuth && store.getters['auth/isAuthenticated']) {
-//     next()
-//   } else if(requireAuth && !store.getters['auth/isAuthenticated']) {
-//     next('/auth?message=auth')
-//   } else {
-//     next()
-//   }
-// })
+  // если странице требуется авторизация и авторизация есть, то продолжаем
+  // если авторизации нет (а она необходимо для этого роута), то делаем редирект на страницу входа в систему
+  if (needAuth && store.getters['auth/isAuthenticated']) {
+    next()
+  } else if(needAuth && !store.getters['auth/isAuthenticated']) {
+    next('/signin?message=access_denied')
+  } else {
+    next()
+  }
+})
 
 export default router

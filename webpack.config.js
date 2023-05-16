@@ -1,33 +1,32 @@
 // DEVELOPMENT config
-
 const path = require('path')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const { VueLoaderPlugin } = require('vue-loader')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const { DefinePlugin } = require('webpack')
+const DotenvWebpackPlugin = require('dotenv-webpack')
 
 module.exports = (env, argv) => {
     const isProduction = argv.mode === 'production'
-
-    // const definePlugin = new DefinePlugin({
-    //     'process.env': {
-    //         NODE_ENV: JSON.stringify(argv.mode),
-    //         BASE_URL: JSON.stringify(isProduction ? '/vue-simple-notes/' : '/')
-    //     }
-    // })
 
     return {
         mode: isProduction ? 'production' : 'development',
         entry: './src/main.js',
         output: {
             path: path.resolve(__dirname, 'dist'),
-            filename: "bundle-[name].js"
+            filename: "bundle-[name].js",
+            // Если publicPath не задан то
+            // при перезагрузки некоторых страниц приложения
+            // теряются js скрипты (точнее определяется относительный путь к ним,
+            // а он должен быть абсолютным)
+            // всё это при использовании historyApiFallback: true
+            publicPath: "/"
         },
         resolve: {
             extensions: ['.js', '.vue', '.json'],
             alias: {
-            '@': path.resolve(__dirname, 'src')
-            }
+                '@': path.resolve(__dirname, 'src'),
+                'node_modules': path.resolve(__dirname, 'node_modules')
+            },
         },
         module: {
             rules: [
@@ -43,7 +42,8 @@ module.exports = (env, argv) => {
                 options: {
                     presets: ['@babel/preset-env']
                 }
-                }
+                },
+                type: 'javascript/auto'
             },
             {
                 test: /\.scss$/,
@@ -71,14 +71,14 @@ module.exports = (env, argv) => {
             ]
         },
         plugins: [
+            new DotenvWebpackPlugin(),
             new MiniCssExtractPlugin({
             filename: 'style.css'
             }),
             new VueLoaderPlugin(),
             new HtmlWebpackPlugin({
             template: 'public/index.html'
-            }),
-            // definePlugin
+            })
         ],
         devServer: {
             static: {
@@ -88,16 +88,15 @@ module.exports = (env, argv) => {
             compress: true,
             port: 3000,
             hot: true,
-            open: true
         },
         optimization: {
             splitChunks: {
             cacheGroups: {
                 vendors: {
-                name: 'vendors',
-                test: /[\\/]node_modules[\\/]/,
-                priority: -10,
-                chunks: 'initial'
+                    name: 'vendors',
+                    test: /[\\/]node_modules[\\/]/,
+                    priority: -10,
+                    chunks: 'initial'
                 }
             }
             }

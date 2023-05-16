@@ -14,19 +14,19 @@
 
         <div class="sidebar__item">
             <AddIcon />
-            <span>Создать заметку</span>
+            <span @click="router.push('/note/new')">Создать заметку</span>
         </div>
         <div class="sidebar__item">
             <LightThemeIcon />
-            <span>Сменить тему</span>
+            <span @click="changeTheme()">Сменить тему</span>
         </div>
         <div class="sidebar__item">
             <SettingsIcon />
-            <span>Настройки</span>
+            <span @click="router.push('/settings')">Настройки</span>
         </div>
         <div class="sidebar__item">
             <QuitIcon />
-            <span style="color: red;">Выйти</span>
+            <span @click="logout()" style="color: red;">Выйти</span>
         </div>
     </aside>
 </template>
@@ -42,6 +42,8 @@ import SettingsIcon from '@/components/icons/SettingsIcon.vue'
 import QuitIcon from '@/components/icons/QuitIcon.vue'
 
 import { ref, watch } from 'vue'
+import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 
 
 export default {
@@ -49,6 +51,9 @@ export default {
     props: ['sidebarIsOpen'],
     emits: ['update:sidebarIsOpen'],
     setup(props, { emit }) {
+
+        const router = useRouter()
+        const store = useStore()
 
         // Референция до dom элемента
         const sidebarRef = ref(null)
@@ -64,10 +69,21 @@ export default {
             if (newValue) sidebarRef.value.classList.add('open')
         })
 
+        const changeTheme = () => {
+            alert('changing theme...')
+        }
 
+        const logout = () => {
+            store.commit('auth/setLogout')
+            router.push('/signin')
+        }
 
         return {
             closeSidebar,
+            changeTheme,
+            logout,
+            router,
+            store,
             sidebarRef,
 
             LogoIcon,
@@ -117,6 +133,7 @@ export default {
 
         .sidebar-close-btn {
             display: inline-block;
+            cursor: pointer;
         }
 
         svg:nth-child(1) {
