@@ -57,6 +57,13 @@ export default {
         color: $warning!important;
     }
 }
+.success {
+    border-left: 5px solid $valid;
+
+    span:first-child  {
+        color: $valid!important;
+    }
+}
 
 .message {
     @include fonts.regular;
@@ -72,6 +79,10 @@ export default {
     padding: 10px;
     padding-bottom: 20px;
     border-radius: 15px;
+    border-top: 1px solid $main-text;
+    border-right: 1px solid $main-text;
+    border-bottom: 1px solid $main-text;
+    z-index: 10000;
 
     .flex-container {
         display: flex;
@@ -94,7 +105,7 @@ export default {
     p {
         margin-top: 25px;
         font-size: 0.9rem;
-        color: $secondary-text;
+        color: $main-text;
     }
 
 }

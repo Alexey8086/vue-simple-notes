@@ -1,48 +1,14 @@
-// import axios from "@/axios/request"
+import axios from "@/axios/request"
 import store from '@/store/index'
 
 export default {
     namespaced: true,
     state() {
-        const date_obj = new Date()
-        const dateTime =
-            ("0" + date_obj.getDate()).slice(-2)
-            + "."
-            + ("0" + (date_obj.getMonth() + 1)).slice(-2)
-            + "."
-            + date_obj.getFullYear()
-            + ", "
-            + ("0" + date_obj.getHours()).slice(-2)
-            + ":"
-            + ("0" + date_obj.getMinutes()).slice(-2)
+        
 
         return {
-            notes: [
-                {
-                    content: 'sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem',
-                    title: 'Sed ut perspiciatis unde',
-                    date: dateTime,
-                    id: 0
-                },
-                {
-                    content: 'sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem',
-                    title: 'him some great pleasure',
-                    date: dateTime,
-                    id: 1
-                },
-                {
-                    content: 'sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem',
-                    title: 'itself, because it is pain',
-                    date: dateTime,
-                    id: 2
-                },
-                {
-                    content: 'sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem',
-                    title: 'denouncing pleasure and praising',
-                    date: dateTime,
-                    id: 3
-                }
-            ]
+            notes: [],
+            currentNote: {empty: true}
         }
     },
     mutations: {
@@ -52,6 +18,10 @@ export default {
         setOneNote(state, note) {
             state.notes.push(note)
         },
+        // добаляет в state заметку, которая была запрошена из БД по id для ее открытия
+        setCurrentNote(state, note) {
+            state.currentNote = note
+        },
         // удаляет одну заметку из массива по её id
         setRemoveOne(state, id) {
             const updatedArray = state.notes.filter((item) => {
@@ -59,12 +29,13 @@ export default {
                 // и используется как id
                 item.id !== id
             })
+            // мутируем состояние
             state.notes = updatedArray
         },
-        setEditOne(state, note) {
+        setUpdatedOne(state, note) {
             const updatedArray = state.notes.map((item) => {
                 if (item.id === note.id) {
-                    return { ...note }
+                    return { ...note.values }
                 }
                 return item
             })
@@ -72,32 +43,107 @@ export default {
         }
     },
     actions: {
-                // Создаёт новую заметку, сохраняет её в БД и добавляет её в store
-                async create({ commit, dispatch }, payload) {
-                    commit('setOneNote', payload)
-                },
-                // Загружаёт все заявки из БД и сохраняет их в state
-                async load({ commit, dispatch }) {
-                    
-                },
-                // Загружает одну заметку из БД по её id и возвращаёт её
-                async loadOne({ commit, dispatch }, id) {
-                    
-                },
-        
-                // Удаляем одну заметку из БД
-                async removeOne({ commit, dispatch }, id) {
-                    
-                },
-        
-                // Изменяем одну заметку из БД
-                async updateOne({ commit, dispatch }, request) {
-                    
-                }
+        // Создаёт новую заметку, сохраняет её в БД и добавляет её в store
+        async create({ commit, dispatch }, payload) {
+            try {
+                const token = store.getters['auth/token']
+                const {data} = await axios.post(`/notes.json?auth=${token}`, payload)
+                dispatch('message', {
+                    value: 'Заметка успешно создана!',
+                    type: 'success'
+                }, {root: true})
+                commit('setOneNote', {...payload, id: data.name})
+            } catch (error) {
+                dispatch('message', {
+                    value: error.message,
+                    type: 'danger'
+                }, {root: true})
+            }
+        },
+
+        // Загружаёт все заявки из БД и сохраняет их в state
+        async load({ commit, dispatch }) {
+            try {
+                const uid = store.getters['auth/uid']
+                const token = store.getters['auth/token']
+                // const { data } = await axios.get(`/notes.json?auth=${token}`)
+                const { data } = await axios.get(`notes.json?auth=${token}&orderBy="uid"&equalTo="${uid}"`)
+                ///notes.json?auth=${token}&orderBy="uid"&equalTo="${userId}"
+                const notes = data ? Object.keys(data).map(id => ({ ...data[id], id })) : null
+                commit('setNotes', notes)
+            } catch (e) {
+                dispatch('message', {
+                    value: e.message,
+                    type: 'danger'
+                }, {root: true})
+            }
+        },
+
+        // Загружает одну заметку из БД по её id и возвращаёт её
+        async loadOne({ commit, dispatch }, id) {
+            try {
+                const uid = store.getters['auth/uid']
+                const token = store.getters['auth/token']
+                const { data } = await axios.get(`/notes/${id}.json?auth=${token}&uid=${uid}`)
+                // if (data?.uid !== uid) 
+                commit('setCurrentNote', data)
+                return data
+            } catch (e) {
+                dispatch('message', {
+                    value: e.message,
+                    type: 'danger'
+                }, {root: true})
+            }
+        },
+    
+        // Удаляем одну заметку из БД
+        async deleteOne({ commit, dispatch }, id) {
+            try {
+                const token = store.getters['auth/token']
+                // удаляем заявку из БД по её id
+                await axios.delete(`/notes/${id}.json?auth=${token}`)
+                // обновляем state с заявками (удаляя из него одну заявку по её id)
+                commit('setRemoveOne', id)
+                // добавляем сообщение (показывая успешное завершение действия)
+                dispatch('message', {
+                    value: 'Заявка удалена',
+                    type: 'success'
+                }, {root: true})
+            } catch (error) {
+                dispatch('message', {
+                    value: error.message,
+                    type: 'danger'
+                }, {root: true})
+            }
+        },
+    
+        // Изменяем одну заметку из БД
+        async updateOne({ commit, dispatch }, note) {
+            try {
+                const token = store.getters['auth/token']
+                // обновляем данные заявки из БД по её id
+                await axios.put(`/notes/${note.id}.json?auth=${token}&orderBy="uid"&equalTo="${uid}"`, note.values)
+                // обновляем state с заявками (удаляя из него одну заявку по её id)
+                commit('setUpdatedOne', note)
+                // добавляем сообщение (показывая успешное завершение действия)
+                dispatch('message', {
+                    value: 'Заявка обновлена',
+                    type: 'success'
+                }, {root: true})
+            } catch (e) {
+                dispatch('message', {
+                    value: e.message,
+                    type: 'danger'
+                }, {root: true})
+            }
+        }
     },
     getters: {
         notes(state) {
             return state.notes
+        },
+        currentNote(state) {
+            return state.currentNote
         }
     }
 }

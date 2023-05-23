@@ -47,6 +47,7 @@ export default {
 @import '@/styles/libs/variables.scss';
 
 .note {
+    // width: 250px;
     height: 220px;
     background: $white;
     box-shadow: 3px 5px 9px rgba(0, 0, 0, 0.25);

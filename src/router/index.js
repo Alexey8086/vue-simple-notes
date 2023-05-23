@@ -6,6 +6,7 @@ import SignIn from '@/views/SignIn.vue'
 import SettingsPG from '@/views/Settings.vue'
 import HomePG from '@/views/Home.vue'
 import NotePG from '@/views/Note.vue'
+import NewNotePG from '@/views/NewNote.vue'
 import NotFound from '@/views/404.vue'
 
 const routes = [
@@ -64,17 +65,17 @@ const routes = [
     meta: {
       layout: 'sidebar',
       auth: true,
-      // isNewNote: false,
+      isNewNote: false,
     }
   },
   {
     path: '/note/new',
     name: 'newNote',
-    component: NotePG,
+    component: NewNotePG,
     meta: {
       layout: 'sidebar',
       auth: true,
-      // isNewNote: true
+      isNewNote: true
     }
   },
   {

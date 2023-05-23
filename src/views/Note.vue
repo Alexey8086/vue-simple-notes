@@ -1,39 +1,52 @@
 <template>
+    <Loader v-if="loading" />
+
     <div class="wrapper">
         <div class="note-content">
-            <editor-js v-model="data" />
+            <editor-js :note="toRaw(note)" :isNewNote="false"/>
         </div>
     </div>
 </template>
 
 <script lang="js">
-import { ref, watch, onMounted, onUpdated } from 'vue'
+import { ref, watch, onMounted, onUpdated, toRaw, markRaw } from 'vue'
+import Loader from '@/components/UI/Loader'
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
 import EditorJs from '@/components/UI/Editor.vue'
 
 
 export default {
-    components: { EditorJs },
-    props: [''],
+    components: { EditorJs, Loader },
+    props: [],
     emits: [''],
 
     setup() {
         const route = useRoute()
         const idx = route.params.id
         const store = useStore()
-        const data = store.getters['note/notes'][idx]
+        const note = ref({})
+        const loading = ref(false)
  
-        console.log(`route.params ${route.params.id}`)
-        console.log("Data", data);
+        // console.log(`route.params ${route.params.id}`)
 
-        watch(data, async (newValue, prevValue) => {
-            await store.dispatch('note/create', newValue)
+        onMounted(async () => {
+            loading.value = true
+            note.value = await store.dispatch('note/loadOne', idx)
+            loading.value = false
+            // customLog(note)
         })
 
 
+        // watch(note, async (newValue, prevValue) => {
+        //     await store.dispatch('note/create', newValue)
+        // })
+
+
         return {
-            data
+            note,
+            loading,
+            toRaw,
         }
     }
 }

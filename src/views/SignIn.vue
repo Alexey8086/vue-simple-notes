@@ -56,7 +56,6 @@ export default {
                 type: 'warning'
             })
         }
-        customLog(route.query)
 
         return {
             ...useLoginForm()

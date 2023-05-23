@@ -1,7 +1,7 @@
 <template>
     <aside ref="sidebarRef" class="sidebar">
         <header>
-            <LogoIcon class="Sidebar-logo-icon" />
+            <LogoIcon @click="router.push('/home')" class="Sidebar-logo-icon" />
             <span>Simple Notes</span>
             <CloseIcon @click="closeSidebar" class="sidebar-close-btn" />
             <hr>
@@ -14,19 +14,19 @@
 
         <div class="sidebar__item">
             <AddIcon />
-            <span @click="router.push('/note/new')">Создать заметку</span>
+            <span @click="createNoteLink">Создать заметку</span>
         </div>
         <div class="sidebar__item">
             <LightThemeIcon />
-            <span @click="changeTheme()">Сменить тему</span>
+            <span @click="changeThemeLink">Сменить тему</span>
         </div>
         <div class="sidebar__item">
             <SettingsIcon />
-            <span @click="router.push('/settings')">Настройки</span>
+            <span @click="settingsLink">Настройки</span>
         </div>
         <div class="sidebar__item">
             <QuitIcon />
-            <span @click="logout()" style="color: red;">Выйти</span>
+            <span @click="logoutLink" style="color: red;">Выйти</span>
         </div>
     </aside>
 </template>
@@ -69,19 +69,33 @@ export default {
             if (newValue) sidebarRef.value.classList.add('open')
         })
 
-        const changeTheme = () => {
-            alert('changing theme...')
+        const createNoteLink = () => {
+            closeSidebar()
+            router.push('/note/new')
         }
 
-        const logout = () => {
+        const changeThemeLink = () => {
+            alert('changing theme...')
+            closeSidebar()
+        }
+
+        const settingsLink = () => {
+            router.push('/settings')
+            closeSidebar()
+        }
+
+        const logoutLink = () => {
+            closeSidebar()
             store.commit('auth/setLogout')
             router.push('/signin')
         }
 
         return {
+            createNoteLink,
+            settingsLink,
             closeSidebar,
-            changeTheme,
-            logout,
+            changeThemeLink,
+            logoutLink,
             router,
             store,
             sidebarRef,

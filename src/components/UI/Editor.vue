@@ -1,12 +1,21 @@
 <template>
-    <div ref="editorRef"></div>
+    <div id="editorjs" ref="editorRef"></div>
 
-    <bottom-menu @editNote="editNote()" @save-note="saveData()" />
+    <bottom-menu
+        @deleteNote="deleteNote"
+        @cancelNote="cancelNote"
+        @editNote="editNote"
+        @save-note="saveData"
+    />
+    
 </template>
 
 <script>
 
 import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import EditorJS from '@editorjs/editorjs'
 import Header from '@editorjs/header'
 import List from '@editorjs/nested-list'
@@ -18,20 +27,31 @@ export default {
     name: 'EditorJs',
     components: { bottomMenu },
     props: {
-        modelValue: {
+        note: {
             type: Object,
             require: false
+        },
+        isNewNote: {
+            type: Boolean,
+            require: true
         }
     },
-    emits: ['getEditorInstance', 'update:modelValue'],
+    emits: ['getEditorInstance'],
 
     setup(props, { emit }) {
 
+        const router = useRouter()
+        const route = useRoute()
+        const store = useStore()
+        const uid = store.getters['auth/uid']
+        const idx = route.params.id
         let editorInstance
+        // const noteData = computed(() => toRaw(props.note.value))
         const editorRef = ref(null)
         const config = {
             autofocus: true,
-            readOnly: true,
+            // если это новая заметка, то мы отключаем readOnly мод
+            readOnly: props.isNewNote ? false : true,
             placeholder: 'Напишите о вашем космически важном, мы никому не расскажем...',
             tools: {
                 header: {
@@ -63,9 +83,16 @@ export default {
 
         const saveData = async () => {
             try {
-                const data = await editorInstance?.save()
-                customLog('Saved data ---> ', data)
-                emit('update:modelValue', data)
+                if (props.isNewNote) {
+                    const data = await editorInstance?.save()
+                    await store.dispatch('note/create', {...data, uid: uid})
+                    router.push('/home')
+                } else {
+                    const data = await editorInstance?.save()
+                    await store.dispatch('note/updateOne', { id: idx, values: {...data, uid: uid} })
+                    router.push('/home')
+                }
+
             } catch (e) {
                 customLog('Saving editor data error: ', e)
             }
@@ -75,32 +102,50 @@ export default {
         const editNote = () => {
             editorInstance.readOnly.toggle()
         }
+        // включаем 'readOnly' мод в редакторе при нажатии на кнопку 'отмена'
+        const cancelNote = () => {
+            editorInstance.readOnly.toggle()
+        }
+
+        const deleteNote = async () => {
+            try {
+                await store.dispatch('note/deleteOne', idx)
+                router.push('/home')
+            } catch (e) {
+                customLog('Saving editor data error: ', e)
+            }
+        }
 
         onMounted(async () => {
-            editorInstance = new EditorJS({
-                holder: editorRef.value,
-                ...config,
-                data: {
-                    ...props.modelValue
-                },
-
-                // onReady: () => {
-                //     console.log('Editor.js is ready to work!')
-                // }
-
-                // onChange: (api, event) => {
-                //     console.log('Now I know that Editor\'s content changed!', event)
-                // }
-            })
-
             try {
+                let data = null
+                if (!props.isNewNote) {
+                    data = await store.dispatch('note/loadOne', idx)
+                }
+
+                editorInstance = new EditorJS({
+                    holder: editorRef.value,
+                    ...config,
+                    data: {
+                        ...data
+                    },
+
+
+                    // onReady: () => {
+                    //     console.log('Editor.js is ready to work!')
+                    // }
+
+                    // onChange: (api, event) => {
+                    //     console.log('Now I know that Editor\'s content changed!', event)
+                    // }
+                })
+
                 await editorInstance.isReady
                 emit('getEditorInstance', editorInstance)
-                customLog('Editor is ready to work!')
-                /** Do anything you need after editor initialization */
-            } catch (reason) {
+            } catch (error) {
                 customLog(`Editor.js initialization failed because of ${reason}`)
             }
+
         })
 
         onBeforeUnmount(() => {
@@ -110,6 +155,9 @@ export default {
         return {
             saveData,
             editNote,
+            cancelNote,
+            deleteNote,
+
             editorRef,
         }
     }

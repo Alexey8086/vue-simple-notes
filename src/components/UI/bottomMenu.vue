@@ -3,8 +3,8 @@
         <div class="bottom-menu__container">
             <button v-if="editBtnShow" @click="editNote" class="btn-primary warning">редактировать</button>
             <button v-if="saveBtnShow" @click="saveNote" class="btn-primary okey">сохранить</button>
-            <button v-if="deleteBtnShow" @click="$emit('deleteNote')" class="btn-primary danger">удалить</button>
-            <button v-if="cancelBtnShow" @click="$emit('cancelNote')" class="btn-primary cancel">отмена</button>
+            <button v-if="deleteBtnShow" @click="deleteNote" class="btn-primary danger">удалить</button>
+            <button v-if="cancelBtnShow" @click="cancelNote" class="btn-primary cancel">отмена</button>
         </div>
     </div>
 </template>
@@ -27,11 +27,12 @@ export default {
 
         const route = useRoute()
         const isNewNote = route.meta?.isNewNote
-        customLog(isNewNote)
 
         if (!isNewNote) {
             editBtnShow.value = true
             deleteBtnShow.value = true
+        } else {
+            saveBtnShow.value = true
         }
 
         const editNote = () => {
@@ -40,7 +41,6 @@ export default {
             deleteBtnShow.value = false
             cancelBtnShow.value = true
             saveBtnShow.value = true
-            customLog('editNote Alert')
         }
 
         const saveNote = () => {
@@ -49,12 +49,14 @@ export default {
 
         const deleteNote = () => {
             context.emit('deleteNote')
-        
         }
         
         const cancelNote = () => {
             context.emit('cancelNote')
-        
+            editBtnShow.value = true
+            deleteBtnShow.value = true
+            cancelBtnShow.value = false
+            saveBtnShow.value = false
         }
 
 

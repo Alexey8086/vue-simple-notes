@@ -1,4 +1,7 @@
 <template>
+
+    <Message />
+
     <div class="menu">
         <MenuIcon
             @click="() => sidebarIsOpen = true"
@@ -30,9 +33,10 @@
 import { ref } from 'vue'
 import Sidebar from '@/components/UI/Sidebar'
 import MenuIcon from '@/components/icons/MenuIcon.vue'
+import Message from '@/components/UI/Message.vue'
 
 export default {
-    components: { MenuIcon, Sidebar },
+    components: { MenuIcon, Sidebar, Message },
     setup() {
         const sidebarIsOpen = ref(false)
 
