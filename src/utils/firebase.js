@@ -1,7 +1,7 @@
 // Import necessary Firebase modules
 import { initializeApp } from 'firebase/app'
 import { doc, getFirestore, collection, getDocs, getDoc  } from 'firebase/firestore'
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth"
+import { getAuth, updateProfile, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth"
 
 
 // Initialize Firebase app
@@ -22,65 +22,45 @@ const Collection = collection
 // Sign In function
 export async function signIn(email, password) {
   try {
-    console.log(app)
     const userCredential = await signInWithEmailAndPassword(auth, email, password)
-    customLog(userCredential)
-    // await userCredential?.user.getIdToken(true)
-    // return userCredential?.user
-  } catch (e) {
-    console.log(e)
-    throw new Error('Error in signIn firebase function: ', e)
+    await userCredential?.user.getIdToken(true)
+    return userCredential?.user
+  } catch (error) {
+    if (error.code) throw error
+    else throw new Error(error.code)
   }
 }
 
 // Sign Up function
-export async function signUp(email, password, username='John Snow', avatarUrl='') {
+export async function signUp({email, password, username}) {
     try {
-        const userCredential = await createUserWithEmailAndPassword(email, password, username, avatarUrl)
+        const user = auth.currentUser
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password)
         await userCredential.user.getIdToken(true)
-        await userCredential.user.updateProfile({
-            displayName: username,
-            photoURL: avatarUrl
+
+        await updateProfile(user, {
+          displayName: username,
+          photoURL: 'test'
         })
-        return userCredential
+
+        return userCredential.user
     } catch (e) {
-        throw new Error('Error in signUp firebase function: ', e)
+        throw new Error(`Error in signUp firebase function: ${e}`)
     }
 
 }
 
 // update user Profile changing all user fields: email, password, displayName, photoUrl
-export async function updateProfile(email, password, displayName, photoUrl) {
+export async function updateProfileCustom(body) {
     try {
       const user = auth.currentUser
-  
-      // Update email if provided
-      if (email) {
-        await user.updateEmail(email)
-      }
-  
-      // Update password if provided
-      if (password) {
-        await user.updatePassword(password)
-      }
-  
-      // Update displayName if provided
-      if (displayName) {
-        await user.updateProfile({
-          displayName: displayName
-        })
-      }
-  
-      // Update photoURL if provided
-      if (photoUrl) {
-        await user.updateProfile({
-          photoURL: photoUrl
-        })
-      }
-  
-      return user
+
+      const userCredential = await updateProfile(user, {...body})
+      
+      customLog(userCredential)
+      return userCredential
     } catch (e) {
-        throw new Error('Error in updateProfile firebase function: ', e)
+        throw new Error(`Error in updateProfile firebase function: ${e}`)
     }
   }
 

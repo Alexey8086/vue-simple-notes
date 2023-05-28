@@ -3,6 +3,31 @@
 
 $top-container-gap: 100px;
 
+
+.invalid {
+    border: 1px solid $invalid !important;
+    color: $invalid;
+}
+
+.valid {
+    border: 1px solid $valid !important;
+    color: $valid;
+}
+
+.invalid-colorOnly{
+    @include fonts.regular;
+    font-size: 12px;
+    margin-top: 8px;
+    color: $invalid;
+}
+
+.valid-colorOnly {
+    @include fonts.regular;
+    font-size: 12px;
+    margin-top: 8px;
+    color: $valid;
+}
+
 .home-link {
     display: flex;
     align-items: left;

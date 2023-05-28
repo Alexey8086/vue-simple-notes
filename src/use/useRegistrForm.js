@@ -65,8 +65,8 @@ export function useRegistrForm () {
         try {
             await store.dispatch('auth/registr', val)
             router.push('/home')
-        } catch (error) {
-            console.log('Error from Submit form -->', error)
+        } catch (e) {
+            throw new Error(`Error from Submit form --> ${e}`)
         }
     })
 

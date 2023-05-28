@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router'
 import { useField, useForm } from 'vee-validate'
 import * as yup from 'yup'
 
-export function useRegistrForm () {
+export function useSettingsForm () {
 
     const router = useRouter()
     const store = useStore()
