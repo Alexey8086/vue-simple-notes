@@ -8,7 +8,7 @@
             class="sidebar-open-btn"
             width="35px"
             height="35px"
-            color="#000000"
+            :color="iconColor"
         />
     </div>
 
@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import Sidebar from '@/components/UI/Sidebar'
 import MenuIcon from '@/components/icons/MenuIcon.vue'
 import Message from '@/components/UI/Message.vue'
@@ -43,6 +43,7 @@ export default {
     setup() {
         const sidebarIsOpen = ref(false)
         const store = useStore()
+        const iconColor = computed(() => (store.state.theme == 'dark') ? '#C0BFBF' : '#1D1D1D')
         const loading = ref(false)
         const user = ref(null)
 
@@ -67,6 +68,7 @@ export default {
             sidebarIsOpen,
             MenuIcon,
             Sidebar,
+            iconColor,
         }
     },
 }

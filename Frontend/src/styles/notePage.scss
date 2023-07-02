@@ -1,13 +1,19 @@
 @use '@/styles/libs/fonts.scss';
 @import '@/styles/libs/variables.scss';
 
-// @include fonts.regular;
+
+
+
+// .cdx-block {
+//     color: var(--main-text) !important;
+// }
+
 .wrapper {
     display: flex;
     justify-content: center;
     width: 100%;
     min-height: 100%;
-    background-color: $white;
+    background-color: var(--smoke-white);
     // margin-top: 50px;
 
     .note-content {
@@ -16,11 +22,12 @@
         padding-left: 35px;
         padding-right: 35px;
         padding-bottom: 50px;
-        background-color: #addef9;
-        background-color: $pure-white;
+        background-color: var(--pure-white);
         min-height: 100vh;
         @include fonts.light;
         line-height: 1.8rem;
+
+
 
         h1,
         h2,
@@ -40,9 +47,7 @@
             padding-top: 50px;
             padding-left: 35px;
             padding-right: 35px;
-            background-color: $pure-white;
-
-
+            // background-color: var(--pure-white);
         }
     }
 }

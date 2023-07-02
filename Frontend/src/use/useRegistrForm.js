@@ -63,8 +63,8 @@ export function useRegistrForm () {
 
     const onSubmit = handleSubmit(async (val) => {
         try {
-            await store.dispatch('auth/registr', val)
-            router.push('/home')
+            const isRegistrSucceed = await store.dispatch('auth/registr', val)
+            isRegistrSucceed ? router.push('/home') : null
         } catch (error) {
             console.log('Error from Submit form -->', error)
         }

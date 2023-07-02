@@ -17,7 +17,9 @@
             <span @click="createNoteLink">Создать заметку</span>
         </div>
         <div class="sidebar__item">
-            <LightThemeIcon />
+            <LightThemeIcon v-if="theme == 'light'" />
+            <DarkThemeIcon v-if="theme == 'dark'" />
+
             <span @click="changeThemeLink">Сменить тему</span>
         </div>
         <div class="sidebar__item">
@@ -55,6 +57,7 @@ export default {
 
         const router = useRouter()
         const store = useStore()
+        const theme = computed(() => store.state.theme)
         const { user } = toRefs(props)
 
         // Референция до dom элемента
@@ -82,7 +85,12 @@ export default {
         }
 
         const changeThemeLink = () => {
-            alert('changing theme...')
+            let theme = store.state.theme
+            if (theme === 'light' || !theme) {
+                theme = 'dark'
+            } else theme = 'light'
+
+            store.dispatch('changeTheme', theme)
             closeSidebar()
         }
 
@@ -115,7 +123,8 @@ export default {
             LightThemeIcon,
             SettingsIcon,
             QuitIcon,
-            user
+            user,
+            theme,
         }
     },
 
@@ -143,8 +152,8 @@ export default {
 .sidebar {
     // display: none;
     z-index: 100;
-    background-color: rgba($white, $alpha: 0.9);
-    box-shadow: 4px 10px 6px -6px #000000;
+    background-color: var(--sidebar-bg);
+    box-shadow: 4px 10px 6px -6px var(--main-text);
     position: fixed;
     height: 100vh;
     width: 100vw;
@@ -185,14 +194,14 @@ export default {
         span {
             font-size: 24px;
             @include fonts.bold;
-            color: $main-text;
+            color: var(--main-text);
             width: calc(100% - 24px - 42px - 37px);
             margin-left: 20px;
         }
 
         hr {
             width: 100%;
-            background-color: $secondary-text;
+            background-color: var(--secondary-text);
             height: 1px;
             margin-top: 20px;
             order: 1;
@@ -211,15 +220,16 @@ export default {
         img {
             width: 109px;
             height: 109px;
-            border: 1px solid $main-text;
+            border: 1px solid var(--main-text);
             border-radius: 50%;
-            background-color: aquamarine;
+            background-color: rgb(64, 138, 241);
         }
 
         span {
             font-size: 20px;
             @include fonts.bold;
             margin-left: 23px;
+            color: var(--main-text);
         }
     }
 
@@ -239,6 +249,7 @@ export default {
             @include fonts.regular;
             margin-left: 20px;
             cursor: pointer;
+            color: var(--main-text);
 
             &:hover {
                 font-weight: bold;
@@ -313,7 +324,7 @@ export default {
             span {
                 font-size: 1rem;
                 @include fonts.bold;
-                color: $main-text;
+                color: var(--main-text);
                 width: 130px;
                 margin-left: 0;
             }

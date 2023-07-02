@@ -50,7 +50,7 @@ export default {
         const deleteNote = () => {
             context.emit('deleteNote')
         }
-        
+
         const cancelNote = () => {
             context.emit('cancelNote')
             editBtnShow.value = true
@@ -87,12 +87,11 @@ $menu-desk-height: 50px;
 .bottom-menu {
     position: fixed;
     z-index: 1;
-    background-color: $pure-white;
+    background-color: var(--pure-white);
     bottom: 0;
     left: 0;
     right: 0;
     height: 40px;
-    box-shadow: 0px 1px 8px 1px rgba(0, 0, 0, 0.25);
     // border-radius: 0px 0px 10px 10px;
 
     .bottom-menu__container {
@@ -104,8 +103,11 @@ $menu-desk-height: 50px;
         justify-content: left;
         gap: 20px;
         padding-left: 24px;
+        box-shadow: 0px 1px 8px 1px var(--shadow-primary);
+
 
         .btn-primary {
+            color: var(--main-text);
             transition: 0.5s;
             background-color: transparent;
 
@@ -120,42 +122,42 @@ $menu-desk-height: 50px;
             @include fonts.light;
 
             &.okey {
-                border: 1px solid $okey;
-                color: $main-text;
+                border: 1px solid var(--okey);
+                color: var(--main-text);
 
                 &:hover {
-                    background-color: $okey;
-                    color: $pure-white;
+                    background-color: var(--okey);
+                    color: white;
                 }
             }
 
             &.warning {
-                border: 2px solid $warning;
-                color: $main-text;
+                border: 2px solid var(--warning);
+                color: var(--main-text);
 
                 &:hover {
-                    background-color: $warning;
-                    color: $pure-white;
+                    background-color: var(--warning);
+                    color: white;
                 }
             }
 
             &.danger {
-                border: 1px solid $invalid;
-                color: $main-text;
+                border: 1px solid var(--invalid);
+                color: var(--main-text);
 
                 &:hover {
-                    background-color: $invalid;
-                    color: $pure-white;
+                    background-color: var(--invalid);
+                    color: white;
                 }
             }
 
             &.cancel {
-                border: 1px solid $primary-plus;
-                color: $main-text;
+                border: 1px solid var(--primary-cyan);
+                color: var(--main-text);
 
                 &:hover {
-                    background-color: $primary;
-                    color: $pure-white;
+                    background-color: var(--cyan);
+                    color: white;
                 }
             }
         }
@@ -174,9 +176,7 @@ $menu-desk-height: 50px;
         .bottom-menu__container {
             width: $note-content-block-tabs-width;
             margin: 0 auto;
-            background-color: transparent;
             backdrop-filter: blur(3px);
-            box-shadow: 0px 1px 8px 1px rgba(0, 0, 0, 0.25);
             border-radius: 19px 19px 0px 0px;
 
             .btn-primary {

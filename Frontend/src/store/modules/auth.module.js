@@ -47,11 +47,13 @@ export default {
                 commit('setUid', user.id)
                 commit('setToken', data.token)
                 commit('setClearMessage', null, {root: true})
+                return true
             } catch (e) {
                 dispatch('message', {
                     value: e.response.data.message,
                     type: 'danger'
                 }, {root: true})
+                return false
             }
         },
         
@@ -68,12 +70,13 @@ export default {
                 commit('setUid', user.id)
                 commit('setToken', data.token)
                 commit('setClearMessage', null, {root: true})
+                return true
             } catch (e) {
-                console.log(e)
                 dispatch('message', {
                     value: e.response.data.message,
                     type: 'danger'
                 }, {root: true})
+                return false
             }
         },
 

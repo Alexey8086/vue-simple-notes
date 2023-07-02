@@ -167,6 +167,11 @@ export default {
 </script>
 
 <style lang='scss'>
+
+.ce-block__content {
+    color: var(--main-text) !important;
+}
+
 @media (max-width: 650px) {
     .ce-popover {
         bottom: 45px !important;

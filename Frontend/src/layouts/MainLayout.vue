@@ -8,13 +8,13 @@
 import Message from '@/components/UI/Message.vue'
 
 export default {
-    components: {Message},
+    components: { Message },
 }
 
 </script>
 
 <style lang='scss'>
-    body {
-        overflow-x: hidden;
-    }
+body {
+    overflow-x: hidden;
+}
 </style> 

@@ -53,8 +53,8 @@ export default {
 .note {
     // width: 250px;
     height: 220px;
-    background: $white;
-    box-shadow: 3px 5px 9px rgba(0, 0, 0, 0.25);
+    background: var(--smoke-white);
+    box-shadow: 3px 5px 9px var(--shadow-primary);
     border-radius: 25px;
     padding: 20px;
 
@@ -67,7 +67,7 @@ export default {
     .note__content {
         font-size: 13px;
         @include fonts.light;
-        color: $main-text;
+        color: var(--main-text);
         height: 60%;
         overflow: hidden;
     }
@@ -80,7 +80,7 @@ export default {
         .running-line {
             font-size: 16px;
             @include fonts.bold;
-            color: $main-text;
+            color: var(--main-text);
 
             white-space: nowrap;
             overflow: hidden;
@@ -104,7 +104,7 @@ export default {
         margin-top: 10px;
         font-size: 16px;
         @include fonts.regular;
-        color: $secondary-text;
+        color: var(--secondary-text);
     }
 }
 

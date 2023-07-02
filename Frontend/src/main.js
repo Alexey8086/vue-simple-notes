@@ -7,7 +7,8 @@ import customLog from './globalFunctions/customLog'
 // глобальные функции (выполняются только в режиме разработки)
 window.customLog = customLog
 
-createApp(App)
-  .use(store)
-  .use(router)
-  .mount('#app')
+const app = createApp(App)
+
+app.use(store)
+app.use(router)
+app.mount("#app")

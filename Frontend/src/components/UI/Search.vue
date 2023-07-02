@@ -83,11 +83,11 @@ export default {
 #search {
     width: 100%;
     height: 28px;
-    box-shadow: inset -2px 3px 6px 2px rgba(0, 0, 0, 0.25);
+    box-shadow: inset -2px 3px 6px 2px var(--search-shadow);
     border-radius: 25px;
     font-size: 12px;
     @include fonts.regular;
-    color: $secondary-text;
+    color: var(--secondary-text);
     padding-left: 19px;
 }
 
@@ -100,8 +100,8 @@ export default {
     button {
         width: 35px;
         height: 15px;
-        background: $white;
-        box-shadow: inset -2px 3px 10px rgba(0, 0, 0, 0.25);
+        background: var(--pure-white);
+        box-shadow: inset -2px 3px 10px var(--search-shadow);
         border-radius: 25px;
         display: flex;
         align-items: center;
@@ -110,7 +110,7 @@ export default {
             display: block;
             width: 13px;
             height: 12px;
-            background-color: $pure-white;
+            background-color: var(--shadow);
             border-radius: 25px;
             margin: 0;
             margin-left: 1px;
@@ -122,14 +122,14 @@ export default {
         }
 
         &.cheked {
-            background: $primary;
+            background: var(--cyan);
         }
     }
 
     span {
-        @include fonts.regular;
+        @include fonts.bold;
         font-size: 10px;
-        color: $secondary-text;
+        color: var(--secondary-text);
         margin-left: 8px;
     }
 

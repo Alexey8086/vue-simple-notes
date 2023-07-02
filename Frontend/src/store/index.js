@@ -6,12 +6,16 @@ export default createStore({
   strict: true,
   state() {
     return {
-      message: null
+      message: null,
+      theme: localStorage.getItem('theme'),
     }
   },
   getters: {
     message(state) {
       return state.message
+    },
+    theme(state) {
+      return state.theme
     },
   },
   mutations: {
@@ -20,13 +24,21 @@ export default createStore({
     },
     setClearMessage(state) {
       state.message = null
+    },
+    setTheme (state, theme) {
+      state.theme = theme
+      localStorage.setItem('theme', theme)
     }
   },
   actions: {
     message({commit}, message) {
       commit('setMessage', message)
       setTimeout(() => commit('setClearMessage'), 5000)
+    },
+    changeTheme({commit}, theme) {
+      commit('setTheme', theme)
     }
+
   },
   modules: {
     auth,
