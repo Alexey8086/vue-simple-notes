@@ -17,7 +17,9 @@ const app = express()
 
 app.use(cors())
 app.use(express.json())
-app.use(express.static(path.resolve(__dirname, 'upload')))
+app.use(express.static('uploads'))
+// app.use('/uploads', express.static(path.resolve(__dirname, 'uploads')))
+
 app.use(express.urlencoded({extended: true}))
 app.use(session({
   secret: process.env.NODE_SESS_KEY,
@@ -25,8 +27,8 @@ app.use(session({
   saveUninitialized: false
 }))
 
-app.use(variables_middleware)
 app.use('/api', router)
+app.use(variables_middleware)
 
 // if (config.node_env === 'production') {
 //   console.log('PRODUCTION MODE INABLE')

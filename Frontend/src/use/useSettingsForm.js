@@ -1,13 +1,12 @@
 import { computed, watch } from 'vue'
-import { useStore } from 'vuex'
-import { useRouter } from 'vue-router'
 import { useField, useForm } from 'vee-validate'
+import store from '@/store'
 import * as yup from 'yup'
+import { useRouter } from "vue-router"
 
-export function useSettingsForm () {
+export function useSettingsForm (file) {
 
     const router = useRouter()
-    const store = useStore()
     const { handleSubmit, isSubmitting, submitCount, values} = useForm()
 
     // с помощью ES6 задаем собственные имена полей для валидации формы
@@ -63,7 +62,20 @@ export function useSettingsForm () {
 
     const onSubmit = handleSubmit(async (val) => {
         try {
-            await store.dispatch('auth/updateProfile', val)
+            const formData = new FormData()
+            formData.append('file', file.value)
+            formData.append('username', val.username)
+            formData.append('email', val.email)
+            formData.append('password', val.password)
+            formData.append('passwordConfirm', val.passwordConfirm)
+        
+            const FormDataValues = {}
+            for (const [key, value] of formData.entries()) {
+              FormDataValues[key] = value
+            }
+        
+            // console.log("onSubmit DATA ----->>>>> ", FormDataValues)
+            await store.dispatch('auth/updateProfile', FormDataValues)
             router.push('/home')
         } catch (error) {
             console.log('Error from Submit form -->', error)

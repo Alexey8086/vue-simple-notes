@@ -49,6 +49,7 @@ $top-container-gap: 100px;
 .form-group {
     display: flex;
     flex-direction: column;
+    
 
     p {
         @include fonts.regular;
@@ -56,6 +57,10 @@ $top-container-gap: 100px;
         margin-top: 8px;
         color: $invalid;
     }
+}
+
+.form-group {
+    margin-top: 40px;
 }
 
 .container {
@@ -89,7 +94,6 @@ $top-container-gap: 100px;
 
         #info__change-img-btn {
             margin-top: 17px;
-            margin-bottom: 30px;
             height: 35px;
         }
     }
@@ -162,7 +166,7 @@ $top-container-gap: 100px;
     
             #info__change-img-btn {
                 margin-top: 25px;
-                margin-bottom: 40px;
+
                 height: 35px;
             }
         }

@@ -1,4 +1,4 @@
-import { $authHost, $host } from "@/axios/index"
+import { $authHost, $host, $authHostMultipart } from "@/axios/index"
 import jwt_decode from "jwt-decode"
 import store from '@/store/index'
 // кастомная обработка ошибок
@@ -82,13 +82,15 @@ export default {
 
         async updateProfile({commit, dispatch}, payload) {
             try {
+                console.log("Log from auth module ----- |||| ", payload)
                 const body = {
                     name: payload.username,
                     email: payload.email,
                     password: payload.password,
+                    file: payload.file,
                     uid: store.getters['auth/uid']
                 }
-                const { data } = await $authHost.post(process.env.VUE_APP_USER_UPDATE_URL, body)
+                const { data } = await $authHostMultipart.post(process.env.VUE_APP_USER_UPDATE_URL, body)
                 const { id } = jwt_decode(data.token)
                 commit('setUid', id)
                 commit('setToken', data.token)

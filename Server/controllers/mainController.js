@@ -1,4 +1,5 @@
 require('dotenv').config()
+const path = require('path')
 const jwt = require('jsonwebtoken')
 const { promisify } = require('util')
 
@@ -9,6 +10,8 @@ const ApiError = require('../error/api_error')
 const getUrl = require('../utils/getUrl')
 const generateJwt = require('../utils/generateJwt')
 
+// https://blog.bitsrc.io/uploading-files-and-images-with-vue-and-express-2018ca0eecd0
+// https://www.positronx.io/vue-js-express-single-multiple-files-and-images-upload/#tc_9630_04
 
 class MainController {
 
@@ -70,21 +73,33 @@ class MainController {
   async update (req,  res, next) {
     try {
       const {name, email, password, uid} = req.body
+      const file = req?.file ? req.file : null
+      let token = null
+
+      // console.log("| 000000000000000000000000000000 |")
+      // console.log("req.body ----- > ", req.body)
+      // console.log("req.file ----- > ", req.file)
+
       const user = await USER.findOne({id: uid})
       const hashPassword = await bcrypt.hash(password, 5)
       user.name = name
       user.email = email
       user.password = hashPassword
 
-      await user.save()
-      const token = generateJwt(user.id, user.email, user.name, user.avatar)
+      if (file) {
+        user.avatar = '/api/uploads/' + file.filename
+        await user.save()
+        token = generateJwt(user.id, user.email, user.name, user.avatar)
+      } else {
+        await user.save()
+      }
+
   
       res.json({token, message: `Данные успешно обновлены`})
     } catch (e) {
       return next(ApiError.internal(`Произошла ошибка: ${e}`))
     }
   }
-
 
   async checkAuth(req, res) {
     let token = null
