@@ -1,9 +1,7 @@
 
 require('dotenv').config()
 // библиотека стилей для  вывода в терминале
-const chalk = require('chalk')
 const express = require('express')
-const session = require('express-session')
 const mongoose = require('mongoose')
 const cors = require('cors')
 const path = require('path')
@@ -27,7 +25,7 @@ app.use('/api', router)
 // при запросе (по url) приложения возращать статику
 // (index.html и все скрипты подключенные к нему, соответственно)
 if (process.env.NODE_ENV === 'production') {
-  console.log(chalk.bgCyan('PRODUCTION MODE INABLE'))
+  console.log('PRODUCTION MODE INABLE')
 
   app.use('/', express.static(path.join(__dirname, 'client', 'dist')))
   app.get('*', (req, res) => {
@@ -40,7 +38,7 @@ app.use(errorHandler)
 const start = async () => {
   try {
     await mongoose.connect(DB_URI)
-    app.listen(PORT, () => console.log(chalk.bgCyan(`Server is running on port ${PORT}`)))
+    app.listen(PORT, () => console.log(`Server is running on port ${PORT}`))
   } catch (e) {
     console.warn('INIT APPLICATION WARNING:', e)
   }

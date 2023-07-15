@@ -17,6 +17,7 @@
     "vee-validate": "^4.9.3",
     "vue": "^3.2.31",
     "vue-router": "^4.0.12",
+    "vue-simple-notes": "file:..",
     "vuex": "^4.0.2",
     "yup": "^1.1.1"
   },
