@@ -42,7 +42,7 @@ export default {
                     password: payload.password
                 }
 
-                const { data } = await $host.post(process.env.VUE_APP_SIGNIN_URL, body)
+                const { data } = await $host.post('user/signin', body)
                 const user = jwt_decode(data.token)
                 commit('setUid', user.id)
                 commit('setToken', data.token)
@@ -65,7 +65,7 @@ export default {
                     password: payload.password,
                 }
 
-                const { data } = await $host.post(process.env.VUE_APP_SIGNUP_URL, body)
+                const { data } = await $host.post('user/signup', body)
                 const user = jwt_decode(data.token)
                 commit('setUid', user.id)
                 commit('setToken', data.token)
@@ -89,7 +89,7 @@ export default {
                     file: payload.file,
                     uid: store.getters['auth/uid']
                 }
-                const { data } = await $authHostMultipart.post(process.env.VUE_APP_USER_UPDATE_URL, body)
+                const { data } = await $authHostMultipart.post('user/update', body)
                 const { id } = jwt_decode(data.token)
                 commit('setUid', id)
                 commit('setToken', data.token)
@@ -109,7 +109,7 @@ export default {
         async getUser({commit, dispatch}, _) {
             try {
                 const uid = store.getters['auth/uid']
-                const res = await $authHost.post(process.env.VUE_APP_GET_USER_URL, {id: uid})
+                const res = await $authHost.post('user/getUser', {id: uid})
                 if (res.data) commit('setUser', res.data.user)
             } catch (e) {
                 throw new Error(e)

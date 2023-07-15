@@ -1,0 +1,35 @@
+@import './variables.scss';
+
+
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    outline: none;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+    /* Width of the scrollbar */
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: $primary;
+    border-radius: 30px;
+    border: 2px solid $pure-white;
+    // transition: background-color 0.5s;
+
+    &:hover {
+        background-color: $primary-plus;
+    }
+}
+
+::-webkit-scrollbar-track {
+    background-color: $white;
+    /* Color of the scrollbar track */
+    border-radius: 50px;
+    /* Rounded corners */
+    box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.35);
+    /* Neumorphism-style shadow */
+}

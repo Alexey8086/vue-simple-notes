@@ -1,0 +1,56 @@
+@use '@/styles/libs/fonts.scss';
+@import '@/styles/libs/variables.scss';
+
+.substrate {
+    z-index: -1;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    align-self: center;
+    left: 0;
+    right: 0;
+    top: 15vh;
+    bottom: 0;
+    color: $primary;
+    @include fonts.bold;
+    font-size: 25rem;
+    text-align: center;
+}
+
+.container {
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 30vh;
+
+    span {
+        @include fonts.light;
+        color: $main-text;
+        font-size: 2.5rem;
+        margin-bottom: 5rem;
+    }
+
+    a {
+        display: block;
+    }
+
+    .go-home {
+        height: 80px;
+        padding: 15px;
+        font-size: 1.4rem;
+        @include fonts.regular;
+        color: $main-text;
+        cursor: pointer;
+        border: 1px solid $main-text;
+        background-color: rgba($color: $primary, $alpha: 0.75);
+        border-radius: 50px;
+        transition: all 0.3s ease-in-out;
+
+        &:hover {
+            scale: 1.1
+        }
+
+    }
+}
