@@ -49,8 +49,6 @@ export function normalizeData(data) {
                 }
             }
 
-
-
             normalizedData.push(obj)
         })
     } else {
@@ -58,6 +56,6 @@ export function normalizeData(data) {
         return null
     }
 
-
+    console.log("NORMILIZE   ____  ", normalizedData.length)
     return normalizedData
 }

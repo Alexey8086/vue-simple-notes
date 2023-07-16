@@ -8,7 +8,7 @@
         </header>
 
         <div class="user-info">
-            <img :src="imageUrl.value" :alt="altText">
+            <img :src="imageUrl.value ? imageUrl.value : user?.avatar" :alt="altText">
             <span>{{ user?.name }}</span>
         </div>
 

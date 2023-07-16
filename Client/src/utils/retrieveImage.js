@@ -24,8 +24,7 @@ export async function retrieveImage (imageBuffer) {
     try {
         let result = {}
 
-        
-      if (imageBuffer) {
+      if (imageBuffer.length) {
         const imageFormat = getImageFormat(imageBuffer)
         const base64Image = btoa(
           new Uint8Array(imageBuffer).reduce((data, byte) => data + String.fromCharCode(byte), '')
@@ -34,8 +33,6 @@ export async function retrieveImage (imageBuffer) {
         result.imageUrl = `data:image/${imageFormat};base64,${base64Image}`
         result.altText = `Uploaded ${imageFormat.toUpperCase()} Image`
       }
-
-      console.log("LOG FROM retrieveImage RESULT length ", result.imageUrl.length)
 
       return result
     } catch (e) {

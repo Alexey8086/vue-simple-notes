@@ -46,6 +46,11 @@ export default {
         },
         setThereIsNotes(state, thereIsNotes) {
             state.thereIsNotes = thereIsNotes
+        },
+        setEmptyState (state) {
+            state.notes = []
+            state.currentNote = {empty: true},
+            state.thereIsNotes = false
         }
     },
     actions: {
@@ -54,8 +59,9 @@ export default {
             try {
                 const { data } = await $authHost.post('notes/create', payload)
 
-                commit('setOneNote', {...payload, id: data.id})
+                // commit('setOneNote', {...payload, id: data.id})
                 commit('setClearMessage', null, {root: true})
+
                 dispatch('message', {
                     value: "Заметка успешно создана!",
                     type: 'success'

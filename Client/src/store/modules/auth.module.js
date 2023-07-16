@@ -26,6 +26,8 @@ export default {
         setLogout(state) {
             state.token = null
             state.uid = null
+            // Необходимо протестровать !!!
+            store.commit('note/setEmptyState')
             localStorage.removeItem(TOKEN_KEY)
             localStorage.removeItem("uid")
         },
@@ -110,7 +112,7 @@ export default {
             try {
                 const uid = store.getters['auth/uid']
                 const res = await $authHost.post('user/getUser', {id: uid})
-                if (res.data) commit('setUser', res.data.user)
+                if (res?.data) commit('setUser', res.data.user)
             } catch (e) {
                 throw new Error(e)
             }

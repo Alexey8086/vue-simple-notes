@@ -9,10 +9,16 @@
             <Note v-if="notes.value" v-for="note in notes.value" :content="note.content" :title="note.title"
                 :date="note.date" :idx="note.id" :key="note.id" />
             <div v-else-if="searchText">Совпадений не найдено</div>
-            <div v-else>Упс, похоже здесь пусто, создайте что-нибудь восхитительное</div>
+            <div class="no-content-block" v-else>
+                <NoContentIcon />
+                <span>Тут пока совсем пусто. Скорее начните записывать ваше космически важное!</span>
+            </div>
         </transition-group>
 
-        <div ref="observer" class="observer"></div>
+        <div ref="observer" class="observer">
+            <span v-if="thereIsNotes.value">ЗАГРУЖАЕМ...</span>
+            <span v-else>ВСЕ ЗАМЕТКИ ЗАГРУЖЕНЫ!</span>
+        </div>
     </div>
 </template>
 
@@ -23,9 +29,10 @@ import Loader from '@/components/UI/Loader.vue'
 import { normalizeData } from '@/utils/normilizeData'
 import { ref, computed, watch, onMounted, toRaw, reactive } from 'vue'
 import { useStore } from 'vuex'
+import NoContentIcon from '@/components/icons/NoContentIcon.vue'
 
 export default {
-    components: { Search, Note, Loader },
+    components: { Search, Note, Loader, NoContentIcon },
     setup() {
         const store = useStore()
         const isSearching = ref(false)
@@ -45,12 +52,19 @@ export default {
         const thereIsNotes = reactive({ value: null })
         let observerInst = null
 
+        // отслеживаем наличие заметок в бд, которые ещё не отображены на клиенте
+        thereIsNotes.value = computed(() => { return store.state.note.thereIsNotes})
+
         // порционная загрузка новых заметок с сервера
         const loadMoreNotes = async () => {
             try {
-                loading.value = true
-                await store.dispatch('note/loadMore', { notes: store.state.note.notes, limit: 10 })
-                loading.value = false
+                // если в бд ещё остались заметки (по умолчания параметр задан в true)
+                if (thereIsNotes) {
+                    loading.value = true
+                    await store.dispatch('note/loadMore', { notes: store.state.note.notes, limit: 10 })
+                    loading.value = false
+                }
+
             } catch (e) {
                 throw new Error(e)
             }
@@ -62,6 +76,7 @@ export default {
             // загружаем порцию заметок при пересечении обзервера и если не выполняется поиск
             if (target.isIntersecting && !isSearching.value) {
                 loadMoreNotes()
+                if (!thereIsNotes.value) target.target.style.visibility = 'hidden'
             }
         }
 
@@ -75,11 +90,13 @@ export default {
         }
 
 
-        onMounted(() => {
+        onMounted(async () => {
+            console.warn("MOUNTED")
             if (observer.value) {
                 observerInst = new IntersectionObserver(handleIntersection, toRaw(options))
                 observerInst.observe(observer.value)
             }
+
         })
 
         // отслеживаем состояние поисковой строки
@@ -110,8 +127,7 @@ export default {
 
         })
 
-        // отслеживаем наличие заметок в бд, которые ещё не отображены на клиенте
-        thereIsNotes.value = computed(() => { return store.state.note.thereIsNotes})
+
 
 
         return {
@@ -149,11 +165,5 @@ export default {
 
 .notesList-move {
     transition: transform 0.45s ease;
-}
-
-.observer {
-    height: 30px;
-    background-color: #579cef;
-    width: 100%;
 }
 </style> 

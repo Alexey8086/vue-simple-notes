@@ -21,11 +21,13 @@ const User = new Schema({
     },
     avatar: {
         type: String,
-        require: false
+        require: false,
+        default: ''
     },
     userImg: {
         type: Buffer,
-        require: false
+        require: false,
+        default: ''
     }
 })
 

@@ -10,9 +10,6 @@ const ApiError = require('../error/api_error')
 const getUrl = require('../utils/getUrl')
 const generateJwt = require('../utils/generateJwt')
 
-// https://blog.bitsrc.io/uploading-files-and-images-with-vue-and-express-2018ca0eecd0
-// https://www.positronx.io/vue-js-express-single-multiple-files-and-images-upload/#tc_9630_04
-
 class MainController {
 
   async signup (req, res, next) {
