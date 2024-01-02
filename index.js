@@ -1,6 +1,5 @@
 
 require('dotenv').config()
-// библиотека стилей для  вывода в терминале
 const express = require('express')
 const mongoose = require('mongoose')
 const cors = require('cors')
