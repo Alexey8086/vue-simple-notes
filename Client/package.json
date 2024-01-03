@@ -2,7 +2,7 @@
   "name": "vue-simple-notes",
   "version": "2.0.0",
   "scripts": {
-    "start-client": "webpack-dev-server --config webpack.config.js",
+    "dev": "webpack-dev-server --config webpack.config.js",
     "build": "webpack build"
   },
   "dependencies": {
