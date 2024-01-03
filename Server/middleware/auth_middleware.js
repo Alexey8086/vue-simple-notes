@@ -16,16 +16,6 @@ module.exports = async function (req, res, next) {
     }
   }
 
-  // jwt.verify(token, process.env.NODE_JWT_KEY, (e, decoded) => {
-  //   if (e) {
-  //       return res.status(401)
-  //       .json({ message: 'Пользователь не авторизован! (попытка несанкционированного входа в систему)' })
-  //   }
-
-  //   req.user = decoded
-  //   next()
-  // })
-
   try {
     const verifyToken = promisify(jwt.verify)
     const decoded = await verifyToken(token, process.env.NODE_JWT_KEY)
